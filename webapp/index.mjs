@@ -13,7 +13,6 @@ import {
 
 let ollama_base_url = process.env.OLLAMA_BASE_URL
 let llm_name = process.env.LLM
-let http_port = process.env.HTTP_PORT
 
 const model = new ChatOllama({
   baseUrl: ollama_base_url,
@@ -40,7 +39,7 @@ const fastify = Fastify({
   logger: false
 })
 
-const { ADDRESS = '0.0.0.0', PORT = http_port } = process.env
+const { ADDRESS = '0.0.0.0', HTTP_PORT = '8080' } = process.env
 
 // Serve public/index.html
 fastify.register(fastifyStatic, {
@@ -62,11 +61,11 @@ fastify.post('/prompt', async (request, reply) => {
 
 const start = async () => {
   try {
-    await fastify.listen({ host: ADDRESS, port: parseInt(PORT, 10)  })
+    await fastify.listen({ host: ADDRESS, port: parseInt(HTTP_PORT, 10)  })
   } catch (err) {
     fastify.log.error(err)
     process.exit(1)
   }
-  console.log(`🌍 Server listening at ${ADDRESS}:${PORT}`)
+  console.log(`🌍 Server listening at ${ADDRESS}:${HTTP_PORT}`)
 }
 start()
